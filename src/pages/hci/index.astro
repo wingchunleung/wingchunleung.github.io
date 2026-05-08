@@ -196,7 +196,7 @@ const assignments: Assignment[] = [
             {
               image: '/files/shepherd/brainstorming/smart-watch-trend.png',
               imageAlt: 'Adoption-curve chart: smartwatch (2019-2025) vs smartphone (2009-2015), first 6 years',
-              body: "After COVID, people also care more about their personal health, supported by a lot of research and articles. I did some quick digging on smartwatch adoption: over the first six years, smartwatches reached about 2.81x the volume of smartphones over their own first six years. That's what got us thinking about Shepherd.",
+              body: "Lastly, after COVID, it became clear that people care much more about their personal health (which is also supported by many studies and articles). Because of this, I conducted some quick research on smartwatch adoption rates -- in just the first 6 years of adoption, smartwatches reached around 2.81 times the shipment volume of smartphones during their early adoption period. This suggests a strong public interest in personal health and self-monitoring.\n\nAt the same time, we now have many passive-tracking apps that continuously monitor health data. However, most of these apps still fail to provide truly actionable insights. This shows a gap between what users currently have and what they actually want. Therefore, my team decided to move in this direction and build Shepherd.",
             },
           ],
           ideation: [
@@ -439,7 +439,9 @@ const principles = [
                                         <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
                                       </button>
                                     </figure>
-                                    <p class="brainstorm-body">{obs.body}</p>
+                                    {obs.body.split('\n\n').map((para) => (
+                                      <p class="brainstorm-body">{para}</p>
+                                    ))}
                                   </li>
                                 ))}
                               </ol>
@@ -472,7 +474,9 @@ const principles = [
                                         <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
                                       </button>
                                     </figure>
-                                    <p class="brainstorm-body">{obs.body}</p>
+                                    {obs.body.split('\n\n').map((para) => (
+                                      <p class="brainstorm-body">{para}</p>
+                                    ))}
                                   </li>
                                 ))}
                               </ol>
@@ -1687,6 +1691,13 @@ const principles = [
     color: var(--color-ink-soft);
     margin: 0;
     max-width: none;
+  }
+
+  /* Paragraph spacing when a brainstorm-body has multiple paragraphs
+     (split on \n\n in the data). Matches the description-para rhythm
+     so multi-paragraph entries read with consistent breathing. */
+  .brainstorm-body + .brainstorm-body {
+    margin-top: 1.25em;
   }
 
   /* Single-figure sub-section (Prototype, User feedback). The image
