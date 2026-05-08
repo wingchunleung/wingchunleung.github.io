@@ -104,6 +104,12 @@ type Phase = {
   status: 'completed' | 'in-progress' | 'upcoming';
   note?: string;
   description?: string;            // paragraphs separated by \n\n
+  descriptionImages?: {            // optional inline figures within an essay-style description
+    afterParagraph: number;        // 0-indexed: image inserts after this paragraph
+    src: string;
+    alt: string;
+    caption?: string;              // optional caption shown beneath the figure
+  }[];
   acknowledgments?: string[];
   artifact?: Artifact;
   productShowcase?: ProductShowcase;
@@ -147,8 +153,23 @@ const assignments: Assignment[] = [
       },
       {
         label: 'Phase 2',
-        status: 'upcoming',
-        note: 'TBD',
+        title: 'Essay',
+        status: 'completed',
+        descriptionImages: [
+          {
+            afterParagraph: 1,
+            src: '/files/kimi-claw.png',
+            alt: 'Kimi Claw branding card -- a beige card with the Kimi Claw wordmark, a blue cartoon character, and a red lobster claw',
+            caption: "Kimi Claw's promotional poster -- the soft blue tones and cartoon-style icons mentioned above.",
+          },
+          {
+            afterParagraph: 2,
+            src: '/files/kimi-claw-reasoning.png',
+            alt: 'Kimi-Lobster bot chat showing a long chain of reasoning before answering a simple "Hello" -- visible memory-consolidation notes, persona reminders, and stylistic instructions before the actual reply',
+            caption: "A long chain of reasoning before a one-word reply -- the cognitive-load weakness in practice.",
+          },
+        ],
+        description: "For the video paper, I chose Kimi Claw because I personally use it daily for routine tasks. Besides that, I also use it to stay more connected to the world. For example, I set up agent skills to brief me on the 3 most important market news events from the last 24 hours at 8 AM every morning (since I am interested in finance). While there are many advantages to using this product, I am also dissatisfied with some aspects of it, and wish I were on the team to improve them. With that, I decided to choose this product for my video paper presentation.\n\nI believe the biggest takeaway from doing this video paper is that it helped me connect HCI theories with real-world product design much more clearly. While analyzing Kimi Claw's strengths and weaknesses, I started noticing how many design decisions are actually influenced by HCI principles. For example, the concept of mental shortcuts helps explains why the Kimi Claw chat interface is designed to reduce users' cognitive load. At the same time, concepts such as color psychology and robot appearance helped explain why Kimi Claw uses soft blue tones and cute cartoon-style icons to create a calm and approachable feeling instead of making the AI feel overly technical or intimidating.\n\nWhile doing the analysis, many of the concepts discussed in class also naturally came back to my mind. For example, the idea of invisible computing reminded me of products such as Google's Nest Thermostat, which continuously works in the background without constantly interrupting the user. This also helped me better understand one of Kimi Claw's biggest weaknesses -- always presenting long chains of reasoning to users, which increases cognitive load and makes the experience feel less seamless.\n\nThis process also changed how I think about product development. As someone about to graduate from the School of Engineering at HKUST, I previously believed that building a good product was mostly about technical implementation. However, after taking this course, I realized that understanding users' actual needs and experiences is often even more important than the technical side itself. One example that sticks in my mind is the case of designing a weighing scale for pregnant mothers. At first, many people focused on technical solutions, such as making the scale longer or more visible. However, what many mothers actually wanted was simply their husbands' support during the process. This made me realize that good product design is not only about solving technical problems, but also about deeply understanding users' real needs and emotions.\n\nBesides the video paper itself, I also applied many HCI principles while building my portfolio website for this project. During the design process, I reviewed the lecture notes and started thinking about how concepts such as empathy, prototyping, and iterative evaluation could improve the website. With that, instead of focusing heavily on visual design, I started thinking from the users' perspective -- what information a recruiter or anyone viewing my portfolio would care about first, and how to make the website feel more welcoming and easier to navigate. I also looked at examples of websites with poor user experience (e.g., the boutique wealth management firm Camelota Advisors, where I previously interned), to better understand what design choices I should avoid. Throughout the implementation process, I continuously refined the website step by step and eventually reached a version that I was genuinely satisfied with.\n\nAfter implementing the website, I also shared it with my family members, especially my elder brother, who already has his own portfolio website. He told me that my website felt very welcoming and professional. Besides that, one of my classmates from the HCI course (Hrsh) found my portfolio page one day, and said he liked the design. For me, this feedback further showed how HCI principles can genuinely improve users' overall experience and impression of a product.",
       },
     ],
   },
@@ -368,8 +389,8 @@ const principles = [
               {assignment.phases.map((phase) => (
                   <li class="phase-item">
                     {phase.productShowcase ? (
-                      <div class="phase phase-showcase">
-                        <div class="phase-summary phase-summary-static">
+                      <details class="phase phase-showcase">
+                        <summary class="phase-summary">
                           <span class="phase-summary-main">
                             <span class="phase-num">{phase.label}</span>
                             {phase.title && <span class="phase-title">{phase.title}</span>}
@@ -377,7 +398,15 @@ const principles = [
                               {phase.status === 'completed' ? 'Completed' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                             </span>
                           </span>
-                        </div>
+                          <span class="phase-toggle">
+                            <span class="phase-toggle-text"></span>
+                            <svg class="phase-chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                              <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
+                        </summary>
+
+                        <div class="phase-body">
 
                         <div class="showcase-row">
                           <figure class="showcase-demo-pane">
@@ -715,10 +744,11 @@ const principles = [
                             </div>
                           </>
                         )}
-                      </div>
+                        </div>
+                      </details>
                     ) : phase.artifact?.inline ? (
-                      <div class="phase phase-rich">
-                        <div class="phase-summary phase-summary-static">
+                      <details class="phase phase-rich">
+                        <summary class="phase-summary">
                           <span class="phase-summary-main">
                             <span class="phase-num">{phase.label}</span>
                             {phase.title && <span class="phase-title">{phase.title}</span>}
@@ -726,7 +756,15 @@ const principles = [
                               {phase.status === 'completed' ? 'Completed' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                             </span>
                           </span>
-                        </div>
+                          <span class="phase-toggle">
+                            <span class="phase-toggle-text"></span>
+                            <svg class="phase-chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                              <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
+                        </summary>
+
+                        <div class="phase-body">
 
                         {phase.projectTitle && (
                           <p class="phase-project-title">{phase.projectTitle}</p>
@@ -798,23 +836,10 @@ const principles = [
                         </a>
 
                         {phase.description && (
-                          <div class="description-clip" data-expanded="false">
-                            <div class="description-body">
-                              {phase.description.split('\n\n').map((para) => (
-                                <p class="description-para">{para}</p>
-                              ))}
-                            </div>
-                            <button
-                              type="button"
-                              class="description-toggle"
-                              aria-expanded="false"
-                              data-toggle-description
-                            >
-                              <span class="description-toggle-label">Show more</span>
-                              <svg class="description-toggle-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                                <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                              </svg>
-                            </button>
+                          <div class="description-body description-body-expanded">
+                            {phase.description.split('\n\n').map((para) => (
+                              <p class="description-para">{para}</p>
+                            ))}
                           </div>
                         )}
 
@@ -826,7 +851,8 @@ const principles = [
                             ))}
                           </div>
                         )}
-                      </div>
+                        </div>
+                      </details>
                     ) : phase.artifact ? (
                       <details class="phase">
                         <summary class="phase-summary">
@@ -871,6 +897,52 @@ const principles = [
                               <path d="M1 11L11 1M11 1H3M11 1v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                           </a>
+                        </div>
+                      </details>
+                    ) : phase.description ? (
+                      <details class="phase phase-essay">
+                        <summary class="phase-summary">
+                          <span class="phase-summary-main">
+                            <span class="phase-num">{phase.label}</span>
+                            {phase.title && <span class="phase-title">{phase.title}</span>}
+                            <span class:list={['phase-status', phase.status]}>
+                              {phase.status === 'completed' ? 'Completed' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
+                            </span>
+                          </span>
+                          <span class="phase-toggle">
+                            <span class="phase-toggle-text"></span>
+                            <svg class="phase-chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                              <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
+                        </summary>
+                        <div class="phase-body phase-essay-body">
+                          {phase.description.split('\n\n').map((para, i) => (
+                            <>
+                              <p class="description-para">{para}</p>
+                              {phase.descriptionImages?.filter((img) => img.afterParagraph === i).map((img) => (
+                                <figure class="essay-figure">
+                                  <button
+                                    type="button"
+                                    class="zoom-trigger"
+                                    data-zoomable
+                                    aria-haspopup="dialog"
+                                    aria-label={`Enlarge image: ${img.alt}`}
+                                  >
+                                    <img
+                                      src={img.src}
+                                      alt={img.alt}
+                                      loading="lazy"
+                                    />
+                                    <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
+                                  </button>
+                                  {img.caption && (
+                                    <figcaption>{img.caption}</figcaption>
+                                  )}
+                                </figure>
+                              ))}
+                            </>
+                          ))}
                         </div>
                       </details>
                     ) : (
@@ -1145,6 +1217,88 @@ const principles = [
   .phase-summary::-webkit-details-marker { display: none; }
   .phase-summary::marker { content: ''; display: none; }
 
+  .phase-summary:focus-visible {
+    outline: 2px solid var(--color-celadon);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Show details / Hide details affordance on the right of the summary */
+  .phase-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    color: var(--color-celadon);
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    font-weight: var(--weight-medium);
+    flex-shrink: 0;
+  }
+
+  .phase-summary:hover .phase-toggle {
+    color: var(--color-ink);
+  }
+
+  /* Toggle text flips between "Show details" / "Hide details" via ::before
+     so the same span carries both states without JS. */
+  .phase-toggle-text {
+    font-size: 0;
+  }
+
+  .phase-toggle-text::before {
+    content: 'Show details';
+    font-size: var(--text-caption);
+  }
+
+  details.phase[open] .phase-toggle-text::before {
+    content: 'Hide details';
+  }
+
+  .phase-chevron {
+    transition: transform var(--duration-normal) var(--ease-out);
+    color: currentColor;
+  }
+
+  details.phase[open] .phase-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Phase body wrapper. Lives inside <details> after the <summary>; the
+     existing rich/showcase/essay styling applies to its children. */
+  .phase-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-3);
+  }
+
+  /* Smooth height animation for <details> -- progressive enhancement.
+     Only Chromium 129+ supports interpolate-size + ::details-content;
+     older browsers get an instant snap (still accessible, just not
+     animated). Reduced-motion users always snap. */
+  @supports (interpolate-size: allow-keywords) {
+    :root { interpolate-size: allow-keywords; }
+    details.phase::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size var(--duration-normal) var(--ease-out),
+                  content-visibility var(--duration-normal) var(--ease-out) allow-discrete;
+    }
+    details.phase[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .phase-chevron,
+    details.phase::details-content {
+      transition: none;
+    }
+  }
+
   .phase-summary-main {
     display: inline-flex;
     align-items: center;
@@ -1234,6 +1388,51 @@ const principles = [
     align-items: center;
     gap: var(--space-2) var(--space-3);
     color: var(--color-wash);
+  }
+
+  /* Essay phase -- prose-only phase (no artifact, no productShowcase).
+     Uses the description-para styling from the rich-phase pattern, no
+     show-more clipping. The full essay is shown. */
+  .phase-essay {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .phase-essay-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: none;
+  }
+
+  /* Inline figure inside an essay phase -- centered, smaller than the
+     slide-viewer pattern so it reads as a supporting illustration
+     rather than a hero. Vertical margins handle paragraph spacing
+     above and below. */
+  .essay-figure {
+    margin: var(--space-5) auto;
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .essay-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+  }
+
+  .essay-figure figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-wash);
+    text-align: center;
+    margin-top: var(--space-2);
+    line-height: var(--leading-normal);
+    max-width: 56ch;
+    margin-inline: auto;
   }
 
   /* ── Rich phase: project title + always-on embed + foldable description ── */
@@ -1412,38 +1611,13 @@ const principles = [
   }
 
   /* ── Description clip / show-more pattern ───────────────────────────── */
-  /* Description spans the full deliverable width — user chose the whole
-     horizontal span over the Tufte 80ch cap. At a 1200px container the
-     line measure is wider than the comprehension-safe range; that
-     trade-off is intentional, accepted in DDR-004 §10. */
-  .description-clip {
-    margin-top: var(--space-3);
-  }
-
+  /* Description body -- now lives inside a collapsible <details>.phase
+     wrapper, so the old show-more clip + fade gradient are no longer
+     needed (the <details> provides the expand/collapse affordance).
+     Just a thin top margin to separate from the iframe / external
+     link above. */
   .description-body {
-    /* 3 lines at the wider line-height (1.85). Recomputed in iteration 3
-       when line-height bumped from 1.7 to 1.85 — see DDR-004 §11. */
-    max-height: 5.55em;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .description-clip[data-expanded="true"] .description-body {
-    max-height: none;
-  }
-
-  .description-body::after {
-    content: '';
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 2.4em;
-    background: linear-gradient(to bottom, transparent, var(--color-bg));
-    pointer-events: none;
-    transition: opacity var(--duration-fast) var(--ease-out);
-  }
-
-  .description-clip[data-expanded="true"] .description-body::after {
-    opacity: 0;
+    margin-top: var(--space-3);
   }
 
   /* Wide-line typography compensation. When prose flows past the
@@ -1464,35 +1638,6 @@ const principles = [
 
   .description-para + .description-para {
     margin-top: 1.5em;
-  }
-
-  .description-toggle {
-    background: none;
-    border: none;
-    padding: var(--space-2) 0 0;
-    margin: 0;
-    font: inherit;
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-celadon);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .description-toggle:hover {
-    color: var(--color-ink);
-  }
-
-  .description-toggle-arrow {
-    transition: transform var(--duration-normal) var(--ease-out);
-  }
-
-  .description-clip[data-expanded="true"] .description-toggle-arrow {
-    transform: rotate(180deg);
   }
 
   /* ── Phase-level acknowledgments — centered colophon at the tail ────── */
