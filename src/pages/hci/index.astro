@@ -2027,19 +2027,20 @@ const principles = [
   }
 
   /* Mono "CLICK TO ENLARGE" pill, bottom-right of the figure, fades in
-     on hover/focus only (touch falls back to the button affordance). */
+     on hover/focus only (touch falls back to the button affordance).
+     Sized small -- a hint, not a stamp. */
   .zoom-hint {
     position: absolute;
     bottom: var(--space-2);
     right: var(--space-2);
-    padding: 4px 8px;
+    padding: 2px 6px;
     background: var(--color-bg);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: 0.5rem;
     font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wider);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-celadon);
     opacity: 0;
