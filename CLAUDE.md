@@ -125,6 +125,32 @@ PDF lecture notes are stored at: `/home/wing/Documents/HCI/`
 └── tests/                 # Tests including usability tests
 ```
 
+## Deployment
+
+**Live URL:** https://wingchunleung.github.io/website/
+
+**GitHub Pages source:** `master` branch, `/ (root)` folder. Configured
+under *GitHub → Settings → Pages → Build and deployment → Source: Deploy
+from a branch*.
+
+This means GitHub Pages serves the static files committed at the **root**
+of `master`. The built output of `npm run build` (the contents of `dist/`)
+is placed at the repo root and committed alongside the `src/` source —
+that is why directories like `_astro/`, `about/`, `hci/`, `projects/`,
+and files like `index.html`, `404.html`, `sitemap-*.xml` exist at the
+repo root next to source folders. `.nojekyll` at the repo root is
+required so GitHub Pages does not filter out the `_astro/` directory.
+
+`astro.config.mjs` therefore uses `base: '/'` (not `/website`), since the
+deployment is served from the root of the repository, not a subpath.
+
+**Do not** switch the Pages source back to a `gh-pages` branch or to
+GitHub Actions without an explicit user request — this "deploy from
+master root" setup is intentional and replaces the older gh-pages /
+GitHub Actions configurations referenced in some older skill files
+(`.claude/skills/project-context/tech-stack.md`,
+`.claude/skills/project-context/SKILL.md`) and DDRs.
+
 ## Canonical Landing-Page Intro Animation (LOCKED)
 
 The brand-moment animation that plays once per session after the lock-screen
