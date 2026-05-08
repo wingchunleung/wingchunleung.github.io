@@ -439,9 +439,11 @@ const principles = [
                                         <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
                                       </button>
                                     </figure>
-                                    {obs.body.split('\n\n').map((para) => (
-                                      <p class="brainstorm-body">{para}</p>
-                                    ))}
+                                    <div class="brainstorm-body-wrap">
+                                      {obs.body.split('\n\n').map((para) => (
+                                        <p class="brainstorm-body">{para}</p>
+                                      ))}
+                                    </div>
                                   </li>
                                 ))}
                               </ol>
@@ -474,9 +476,11 @@ const principles = [
                                         <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
                                       </button>
                                     </figure>
-                                    {obs.body.split('\n\n').map((para) => (
-                                      <p class="brainstorm-body">{para}</p>
-                                    ))}
+                                    <div class="brainstorm-body-wrap">
+                                      {obs.body.split('\n\n').map((para) => (
+                                        <p class="brainstorm-body">{para}</p>
+                                      ))}
+                                    </div>
                                   </li>
                                 ))}
                               </ol>
