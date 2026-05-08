@@ -174,8 +174,8 @@ const assignments: Assignment[] = [
       },
       {
         label: 'Phase 2',
-        title: 'Prototype',
-        status: 'in-progress',
+        title: 'Prototype and implementation',
+        status: 'completed',
         productShowcase: {
           name: 'Shepherd',
           logo: '/files/shepherd/logo.png',
@@ -374,7 +374,7 @@ const principles = [
                             <span class="phase-num">{phase.label}</span>
                             {phase.title && <span class="phase-title">{phase.title}</span>}
                             <span class:list={['phase-status', phase.status]}>
-                              {phase.status === 'completed' ? 'Done' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
+                              {phase.status === 'completed' ? 'Completed' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                             </span>
                           </span>
                         </div>
@@ -711,7 +711,7 @@ const principles = [
                             <span class="phase-num">{phase.label}</span>
                             {phase.title && <span class="phase-title">{phase.title}</span>}
                             <span class:list={['phase-status', phase.status]}>
-                              {phase.status === 'completed' ? 'Done' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
+                              {phase.status === 'completed' ? 'Completed' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                             </span>
                           </span>
                         </div>
@@ -822,7 +822,7 @@ const principles = [
                             <span class="phase-num">{phase.label}</span>
                             {phase.title && <span class="phase-title">{phase.title}</span>}
                             <span class:list={['phase-status', phase.status]}>
-                              {phase.status === 'completed' ? 'Done' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
+                              {phase.status === 'completed' ? 'Completed' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                             </span>
                           </span>
                           {phase.note && <span class="phase-note">{phase.note}</span>}
@@ -867,7 +867,7 @@ const principles = [
                           <span class="phase-num">{phase.label}</span>
                           {phase.title && <span class="phase-title">{phase.title}</span>}
                           <span class:list={['phase-status', phase.status]}>
-                            {phase.status === 'completed' ? 'Done' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
+                            {phase.status === 'completed' ? 'Completed' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                           </span>
                         </span>
                         {phase.note && <span class="phase-note">{phase.note}</span>}
