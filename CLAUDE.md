@@ -127,7 +127,12 @@ PDF lecture notes are stored at: `/home/wing/Documents/HCI/`
 
 ## Deployment
 
-**Live URL:** https://wingchunleung.github.io/website/
+**Live URL:** https://wingchunleung.github.io/
+
+(Note: the repo is the user namespace repo `wingchunleung/wingchunleung.github.io`,
+so GitHub Pages serves at the bare `wingchunleung.github.io` host — not the
+old `wingchunleung.github.io/website/` path that some older skill files
+still reference.)
 
 **GitHub Pages source:** `master` branch, `/ (root)` folder. Configured
 under *GitHub → Settings → Pages → Build and deployment → Source: Deploy

@@ -56,15 +56,57 @@ type Artifact =
       inline?: boolean;
     };
 
+type BrainstormObservation = {
+  image: string;                   // image path
+  imageAlt: string;                // alt text for accessibility
+  body: string;                    // narrative paragraph (humanized)
+};
+
+type FeatureFigure = {
+  image: string;                   // image path
+  imageAlt: string;                // alt text (image carries words on its own)
+  body?: string;                   // optional intro paragraph
+  layout?: 'wide' | 'side';        // 'wide' (default) -- text above, big image below
+                                   // 'side'           -- smaller image left, text right
+                                   //                     (good for tall / portrait images)
+};
+
+type ProductShowcase = {
+  name: string;                    // product name (alt text)
+  logo: string;                    // logo image (already includes wordmark + tagline)
+  demo: string;                    // demo image (UI screenshot)
+  why: string;                     // "why we named it X" rationale (humanized)
+  teamImage: string;               // composite headshots image (already labelled)
+  brainstorming?: BrainstormObservation[]; // optional discovery / observation cards
+  ideation?: BrainstormObservation[];      // optional ideate-phase artefacts (GOMS, sketches)
+  prototype?: FeatureFigure;       // Prototype 1 -- single big figure with optional intro
+  userFeedback?: FeatureFigure;    // User feedback for Prototype 1
+  prototype2?: FeatureFigure;      // Prototype 2 -- the iteration that came out of the feedback
+  userFeedback2?: FeatureFigure;   // User feedback for Prototype 2 -- round 2 of the same survey
+  demoVideo?: {
+    src: string;                   // embed URL (used by the iframe)
+    href: string;                  // canonical YouTube URL (used by the "open" link)
+    title: string;                 // iframe accessible title
+  };
+  slideDeck?: {                    // optional pre-rendered slide deck (carousel)
+    slides: string[];              // ordered list of slide image URLs (pre-rendered from PDF)
+    href: string;                  // PDF download fallback URL
+    title?: string;                // optional accessible label for the carousel
+  };
+  contribution?: string;           // optional personal-contribution narrative (prose only)
+  reflection?: string;             // optional personal-reflection narrative (prose only)
+};
+
 type Phase = {
   label: string;
   title?: string;
   projectTitle?: string;
-  status: 'completed' | 'upcoming';
+  status: 'completed' | 'in-progress' | 'upcoming';
   note?: string;
   description?: string;            // paragraphs separated by \n\n
   acknowledgments?: string[];
   artifact?: Artifact;
+  productShowcase?: ProductShowcase;
 };
 
 type Assignment = {
@@ -78,7 +120,7 @@ type Assignment = {
 const assignments: Assignment[] = [
   {
     slug: 'final-project',
-    number: '01',
+    number: '02',
     title: 'Final Project (Individual)',
     phases: [
       {
@@ -112,7 +154,7 @@ const assignments: Assignment[] = [
   },
   {
     slug: 'group-project',
-    number: '02',
+    number: '01',
     title: 'Group Project',
     description: 'ARIN5301 Group 5 — collaborative coursework across the term.',
     phases: [
@@ -132,12 +174,83 @@ const assignments: Assignment[] = [
       },
       {
         label: 'Phase 2',
-        status: 'upcoming',
-        note: 'TBD',
+        title: 'Prototype',
+        status: 'in-progress',
+        productShowcase: {
+          name: 'Shepherd',
+          logo: '/files/shepherd/logo.png',
+          demo: '/files/shepherd/demo.png',
+          why: 'A shepherd guides and protects its flock. Shepherd does the same for users -- filtering misinformation and surfacing timely guidance in everyday life.',
+          teamImage: '/files/shepherd/members.png',
+          brainstorming: [
+            {
+              image: '/files/shepherd/brainstorming/costco.png',
+              imageAlt: 'Costco cafeteria with two photographed lunch boxes',
+              body: "In terms of brainstorming, this reminds me of Costco. I used to work there, and I'd have lunch with my colleagues often. One of them always took a picture of his meal before eating, just to track the calories. But other than tracking, the app didn't do much else. I remember thinking -- something's missing, right?",
+            },
+            {
+              image: '/files/shepherd/brainstorming/fake-news.png',
+              imageAlt: 'BOOM Research article on COVID-era misinformation',
+              body: "Misinformation is everywhere after COVID, supported by a lot of research and articles online. The BOOM study above looked at 178 COVID fact-checks in five months back in 2020 -- and that's only one of many surveys saying the same thing.",
+            },
+            {
+              image: '/files/shepherd/brainstorming/smart-watch-trend.png',
+              imageAlt: 'Adoption-curve chart: smartwatch (2019-2025) vs smartphone (2009-2015), first 6 years',
+              body: "After COVID, people also care more about their personal health, supported by a lot of research and articles. I did some quick digging on smartwatch adoption: over the first six years, smartwatches reached about 2.81x the volume of smartphones over their own first six years. That's what got us thinking about Shepherd.",
+            },
+          ],
+          ideation: [
+            {
+              image: '/files/shepherd/ideation/goms.png',
+              imageAlt: 'GOMS framework diagram comparing current and ideal user workflows for handling raw data',
+              body: "We used the GOMS framework -- Goals, Operators, Methods, Selection rules -- to map what a user does today versus what they should have to do. The left column is the current path: take a screenshot, open ChatGPT, write a good prompt, upload. The right column is the ideal: skip all of it. That gap is what Shepherd is built to close.",
+            },
+            {
+              image: '/files/shepherd/ideation/low-fi-prototype.png',
+              imageAlt: 'Two pencil-sketched phone screens showing fake-news and calorie-nudge notifications',
+              body: "From there we sketched -- pencil and paper, fast and cheap. The left sketch is a fake-news notification: 'this is fake news.' The right is a calorie nudge: '1500 kcal left, let's have BBQ rice tonight,' with the breakfast and lunch context that triggered it. These are the two daily flows the prototype was built around.",
+            },
+          ],
+          prototype: {
+            image: '/files/shepherd/prototype-1.png',
+            imageAlt: 'Shepherd dashboard prototype: step count, sleep monitor, live notifications, fake-news detection panel, and calorie scanner',
+            body: "From ideation, our team worked through a lot of directions before landing on a starting point. The first prototype watches what you track and what you read, and pushes one of two things through a notification: a fake-news flag, or a small nudge based on the data you've already got.",
+          },
+          userFeedback: {
+            image: '/files/shepherd/user-feedback.png',
+            imageAlt: 'Prototype 1 feedback ratings across four criteria: usefulness/value (2/5), actionability (4/5), cognitive load (2/5), trust & accuracy (4/5); pull quote "too many notifications" from a "good user"',
+            body: "After Prototype 1, we ran a brief questionnaire with five users. Five short questions each. The chart above sums it up -- actionability and trust scored well, usefulness and cognitive load came in low, and one user said it plainly: \"too many notifications.\"",
+          },
+          prototype2: {
+            image: '/files/shepherd/prototype-2.png',
+            imageAlt: 'Prototype 2 of Shepherd: a calmer two-screen view -- a Photogram social feed with an inline credibility badge, and a Health summary with a single most-watched briefing at the bottom',
+            body: "After Prototype 1 and the feedback, the disadvantages were clear. Users wanted lower cognitive load and something closer to invisible computing -- the system should sit in the background, not crowd them with notifications. So we did more research and built Prototype 2 around that.",
+            layout: 'side',
+          },
+          userFeedback2: {
+            image: '/files/shepherd/user-feedback-2.png',
+            imageAlt: 'Prototype 2 feedback: every score moved up. Usefulness 2 to 5, actionability 4 to 5, cognitive load 2 to 5, trust & accuracy 4 to 5. The same user from round 1 now gives a thumbs-up.',
+            body: "After Prototype 2, we ran the same five users through another short survey and a quick interview. Every score moved up -- usefulness 2 to 5, actionability 4 to 5, cognitive load 2 to 5, trust 4 to 5. The \"too many notifications\" complaint was gone.",
+          },
+          demoVideo: {
+            src: 'https://www.youtube.com/embed/GWiHdHpN7lo?start=38',
+            href: 'https://www.youtube.com/watch?v=GWiHdHpN7lo&t=38s',
+            title: 'Shepherd demo walkthrough on YouTube',
+          },
+          slideDeck: {
+            slides: Array.from({ length: 39 }, (_, i) =>
+              `/files/shepherd/phase2-slides/slide-${String(i + 1).padStart(2, '0')}.jpg`,
+            ),
+            href: '/files/shepherd/making-health-data-actionable.pdf',
+            title: 'Making Health Data Actionable -- Shepherd Phase 2 presentation',
+          },
+          contribution: "On this project I led the team -- organizing meetings, encouraging everyone to speak up, and keeping the work coordinated across phases. I also built the slide deck above and Prototype 2: my teammates built Prototype 1, and I combined their ideas into the second iteration. A specific shout-out to Mridul -- [add the specific reason here].",
+          reflection: "The biggest takeaway for me was how much the iteration hinged on cutting, not adding. Prototype 1 had more signals, more notifications, more screen real estate -- and the feedback was uniform: too much. Pulling things out turned out to be the harder design move. The \"too many notifications\" quote stuck with me.",
+        },
       },
     ],
   },
-];
+].sort((a, b) => a.number.localeCompare(b.number));   // render in 01, 02, ... order
 
 const principles = [
   {
@@ -196,16 +309,13 @@ const principles = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       ASSIGNMENTS
+       SECTION NAVIGATION (thin band, sits between hero and the first
+       coursework chapter; restated as a sticky right-rail TOC at >=
+       1100px so readers can navigate while scrolling).
        ═══════════════════════════════════════════════════════════════════ -->
-  <section id="coursework" class="coursework-section" aria-labelledby="assignments-heading">
+  <section class="coursework-toc-section" aria-label="Section navigation">
     <div class="container">
-      <div class="section-header" data-animate="reveal">
-        <span class="section-label">ARIN5301 deliverables</span>
-        <h2 id="assignments-heading">Coursework</h2>
-      </div>
-
-      <nav class="coursework-toc" aria-label="Section navigation" data-animate="reveal">
+      <nav class="coursework-toc" data-animate="reveal">
         <span class="coursework-toc-label section-label">Sections</span>
         <ol class="coursework-toc-list" role="list">
           {assignments.map((assignment) => (
@@ -224,10 +334,28 @@ const principles = [
           </li>
         </ol>
       </nav>
+    </div>
+  </section>
 
-      <div class="deliverables">
-        {assignments.map((assignment) => (
-          <article id={`assignment-${assignment.slug}`} class="deliverable" data-animate="reveal">
+  <!-- ═══════════════════════════════════════════════════════════════════
+       ASSIGNMENTS as separate banded chapters. Each renders as its own
+       <section> with its own background colour so the boundaries are
+       unmistakable on scroll. Order is driven by the `number` field
+       (sorted in the frontmatter); first chapter sits on paper white,
+       second on paper-warm, third (References) on stone. The
+       `assignment-section` index is used to pick the band.
+       ═══════════════════════════════════════════════════════════════════ -->
+  {assignments.map((assignment, idx) => (
+    <section
+      id={`assignment-${assignment.slug}`}
+      class:list={[
+        'assignment-section',
+        idx === 0 ? 'assignment-section--first' : 'assignment-section--second',
+      ]}
+      aria-label={assignment.title}
+    >
+      <div class="container">
+        <article class="deliverable" data-animate="reveal">
             <header class="deliverable-header">
               <span class="deliverable-eyebrow">Deliverable {assignment.number}</span>
               <h3 class="deliverable-title">{assignment.title}</h3>
@@ -239,14 +367,351 @@ const principles = [
             <ol class="phase-list" role="list">
               {assignment.phases.map((phase) => (
                   <li class="phase-item">
-                    {phase.artifact?.inline ? (
+                    {phase.productShowcase ? (
+                      <div class="phase phase-showcase">
+                        <div class="phase-summary phase-summary-static">
+                          <span class="phase-summary-main">
+                            <span class="phase-num">{phase.label}</span>
+                            {phase.title && <span class="phase-title">{phase.title}</span>}
+                            <span class:list={['phase-status', phase.status]}>
+                              {phase.status === 'completed' ? 'Done' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
+                            </span>
+                          </span>
+                        </div>
+
+                        <div class="showcase-row">
+                          <figure class="showcase-demo-pane">
+                            <img
+                              class="showcase-demo"
+                              src={phase.productShowcase.demo}
+                              alt={`${phase.productShowcase.name} interface`}
+                              loading="lazy"
+                            />
+                          </figure>
+
+                          <div class="showcase-why-pane">
+                            <img
+                              class="showcase-mark"
+                              src={phase.productShowcase.logo}
+                              alt={phase.productShowcase.name}
+                              loading="lazy"
+                            />
+                            <h4 class="showcase-why-title">Why {phase.productShowcase.name} 🐑?</h4>
+                            <p class="showcase-why-text">{phase.productShowcase.why}</p>
+                          </div>
+                        </div>
+
+                        <hr class="showcase-divider" aria-hidden="true" />
+
+                        <div class="showcase-team-block">
+                          <span class="acknowledgments-label showcase-team-label">Team</span>
+                          <figure class="showcase-team">
+                            <img
+                              src={phase.productShowcase.teamImage}
+                              alt={`${phase.productShowcase.name} team`}
+                              loading="lazy"
+                            />
+                          </figure>
+                        </div>
+
+                        {phase.productShowcase.brainstorming && phase.productShowcase.brainstorming.length > 0 && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-brainstorm-block">
+                              <span class="acknowledgments-label showcase-team-label">Brainstorming</span>
+                              <ol class="brainstorm-list" role="list">
+                                {phase.productShowcase.brainstorming.map((obs) => (
+                                  <li class="brainstorm-item">
+                                    <figure class="brainstorm-figure">
+                                      <button
+                                        type="button"
+                                        class="zoom-trigger"
+                                        data-zoomable
+                                        aria-haspopup="dialog"
+                                        aria-label={`Enlarge image: ${obs.imageAlt}`}
+                                      >
+                                        <img
+                                          src={obs.image}
+                                          alt={obs.imageAlt}
+                                          loading="lazy"
+                                        />
+                                        <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
+                                      </button>
+                                    </figure>
+                                    <p class="brainstorm-body">{obs.body}</p>
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.ideation && phase.productShowcase.ideation.length > 0 && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-brainstorm-block">
+                              <span class="acknowledgments-label showcase-team-label">Ideation</span>
+                              <ol class="brainstorm-list" role="list">
+                                {phase.productShowcase.ideation.map((obs) => (
+                                  <li class="brainstorm-item">
+                                    <figure class="brainstorm-figure">
+                                      <button
+                                        type="button"
+                                        class="zoom-trigger"
+                                        data-zoomable
+                                        aria-haspopup="dialog"
+                                        aria-label={`Enlarge image: ${obs.imageAlt}`}
+                                      >
+                                        <img
+                                          src={obs.image}
+                                          alt={obs.imageAlt}
+                                          loading="lazy"
+                                        />
+                                        <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
+                                      </button>
+                                    </figure>
+                                    <p class="brainstorm-body">{obs.body}</p>
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.prototype && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-feature-block">
+                              <span class="acknowledgments-label showcase-team-label">Prototype 1</span>
+                              {phase.productShowcase.prototype.body && (
+                                <p class="showcase-feature-body">{phase.productShowcase.prototype.body}</p>
+                              )}
+                              <figure class="showcase-feature">
+                                <button
+                                  type="button"
+                                  class="zoom-trigger"
+                                  data-zoomable
+                                  aria-haspopup="dialog"
+                                  aria-label={`Enlarge image: ${phase.productShowcase.prototype.imageAlt}`}
+                                >
+                                  <img
+                                    src={phase.productShowcase.prototype.image}
+                                    alt={phase.productShowcase.prototype.imageAlt}
+                                    loading="lazy"
+                                  />
+                                  <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
+                                </button>
+                              </figure>
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.userFeedback && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-feature-block">
+                              <span class="acknowledgments-label showcase-team-label">User feedback (Prototype 1)</span>
+                              {phase.productShowcase.userFeedback.body && (
+                                <p class="showcase-feature-body">{phase.productShowcase.userFeedback.body}</p>
+                              )}
+                              <figure class="showcase-feature">
+                                <button
+                                  type="button"
+                                  class="zoom-trigger"
+                                  data-zoomable
+                                  aria-haspopup="dialog"
+                                  aria-label={`Enlarge image: ${phase.productShowcase.userFeedback.imageAlt}`}
+                                >
+                                  <img
+                                    src={phase.productShowcase.userFeedback.image}
+                                    alt={phase.productShowcase.userFeedback.imageAlt}
+                                    loading="lazy"
+                                  />
+                                  <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
+                                </button>
+                              </figure>
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.prototype2 && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class:list={['showcase-feature-block', { 'is-side': phase.productShowcase.prototype2.layout === 'side' }]}>
+                              <span class="acknowledgments-label showcase-team-label">Prototype 2</span>
+                              <figure class="showcase-feature">
+                                <button
+                                  type="button"
+                                  class="zoom-trigger"
+                                  data-zoomable
+                                  aria-haspopup="dialog"
+                                  aria-label={`Enlarge image: ${phase.productShowcase.prototype2.imageAlt}`}
+                                >
+                                  <img
+                                    src={phase.productShowcase.prototype2.image}
+                                    alt={phase.productShowcase.prototype2.imageAlt}
+                                    loading="lazy"
+                                  />
+                                  <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
+                                </button>
+                              </figure>
+                              {phase.productShowcase.prototype2.body && (
+                                <p class="showcase-feature-body">{phase.productShowcase.prototype2.body}</p>
+                              )}
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.userFeedback2 && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-feature-block">
+                              <span class="acknowledgments-label showcase-team-label">User feedback (Prototype 2)</span>
+                              {phase.productShowcase.userFeedback2.body && (
+                                <p class="showcase-feature-body">{phase.productShowcase.userFeedback2.body}</p>
+                              )}
+                              <figure class="showcase-feature">
+                                <button
+                                  type="button"
+                                  class="zoom-trigger"
+                                  data-zoomable
+                                  aria-haspopup="dialog"
+                                  aria-label={`Enlarge image: ${phase.productShowcase.userFeedback2.imageAlt}`}
+                                >
+                                  <img
+                                    src={phase.productShowcase.userFeedback2.image}
+                                    alt={phase.productShowcase.userFeedback2.imageAlt}
+                                    loading="lazy"
+                                  />
+                                  <span class="zoom-hint" aria-hidden="true">Click to enlarge</span>
+                                </button>
+                              </figure>
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.demoVideo && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-feature-block">
+                              <span class="acknowledgments-label showcase-team-label">Demo</span>
+                              <div class="showcase-video">
+                                <iframe
+                                  src={phase.productShowcase.demoVideo.src}
+                                  title={phase.productShowcase.demoVideo.title}
+                                  loading="lazy"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  allowfullscreen
+                                ></iframe>
+                              </div>
+                              <a
+                                href={phase.productShowcase.demoVideo.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="phase-external"
+                              >
+                                Watch on YouTube
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                  <path d="M1 11L11 1M11 1H3M11 1v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </a>
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.slideDeck && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-feature-block">
+                              <span class="acknowledgments-label showcase-team-label">Slide deck</span>
+                              <div
+                                class="slide-viewer"
+                                tabindex="0"
+                                data-slide-viewer
+                                data-slide-count={phase.productShowcase.slideDeck.slides.length}
+                                aria-roledescription="carousel"
+                                aria-label={phase.productShowcase.slideDeck.title ?? 'Slide deck'}
+                              >
+                                <div class="slide-viewer-stage">
+                                  {phase.productShowcase.slideDeck.slides.map((src, i) => (
+                                    <img
+                                      class:list={['slide-viewer-slide', { 'is-current': i === 0 }]}
+                                      src={src}
+                                      alt={`Slide ${i + 1} of ${phase.productShowcase.slideDeck!.slides.length}`}
+                                      loading={i === 0 ? 'eager' : 'lazy'}
+                                      data-slide-index={i}
+                                      draggable="false"
+                                    />
+                                  ))}
+                                </div>
+                                <div class="slide-viewer-controls">
+                                  <button type="button" class="slide-viewer-btn" data-slide-prev aria-label="Previous slide" disabled>
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                      <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                  </button>
+                                  <span class="slide-viewer-counter" data-slide-counter>1 / {phase.productShowcase.slideDeck.slides.length}</span>
+                                  <button type="button" class="slide-viewer-btn" data-slide-next aria-label="Next slide">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                      <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                  </button>
+                                  <span class="slide-viewer-hint">Use ← → keys</span>
+                                </div>
+                              </div>
+                              <a
+                                href={phase.productShowcase.slideDeck.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="phase-external"
+                              >
+                                Download PDF
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                  <path d="M1 11L11 1M11 1H3M11 1v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </a>
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.contribution && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-prose-block">
+                              <span class="acknowledgments-label showcase-team-label">Contribution</span>
+                              <p class="showcase-feature-body">{phase.productShowcase.contribution}</p>
+                            </div>
+                          </>
+                        )}
+
+                        {phase.productShowcase.reflection && (
+                          <>
+                            <hr class="showcase-divider" aria-hidden="true" />
+
+                            <div class="showcase-prose-block">
+                              <span class="acknowledgments-label showcase-team-label">Reflection</span>
+                              <p class="showcase-feature-body">{phase.productShowcase.reflection}</p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ) : phase.artifact?.inline ? (
                       <div class="phase phase-rich">
                         <div class="phase-summary phase-summary-static">
                           <span class="phase-summary-main">
                             <span class="phase-num">{phase.label}</span>
                             {phase.title && <span class="phase-title">{phase.title}</span>}
                             <span class:list={['phase-status', phase.status]}>
-                              {phase.status === 'completed' ? 'Done' : 'Upcoming'}
+                              {phase.status === 'completed' ? 'Done' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                             </span>
                           </span>
                         </div>
@@ -357,7 +822,7 @@ const principles = [
                             <span class="phase-num">{phase.label}</span>
                             {phase.title && <span class="phase-title">{phase.title}</span>}
                             <span class:list={['phase-status', phase.status]}>
-                              {phase.status === 'completed' ? 'Done' : 'Upcoming'}
+                              {phase.status === 'completed' ? 'Done' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                             </span>
                           </span>
                           {phase.note && <span class="phase-note">{phase.note}</span>}
@@ -402,7 +867,7 @@ const principles = [
                           <span class="phase-num">{phase.label}</span>
                           {phase.title && <span class="phase-title">{phase.title}</span>}
                           <span class:list={['phase-status', phase.status]}>
-                            {phase.status === 'completed' ? 'Done' : 'Upcoming'}
+                            {phase.status === 'completed' ? 'Done' : phase.status === 'in-progress' ? 'In progress' : 'Upcoming'}
                           </span>
                         </span>
                         {phase.note && <span class="phase-note">{phase.note}</span>}
@@ -412,10 +877,9 @@ const principles = [
                 ))}
               </ol>
           </article>
-        ))}
-      </div>
-    </div>
-  </section>
+        </div>
+      </section>
+    ))}
 
   <!-- ═══════════════════════════════════════════════════════════════════
        REFERENCES — HCI principles that shaped the deliverables
@@ -445,6 +909,21 @@ const principles = [
       </div>
     </div>
   </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       LIGHTBOX -- single instance for click-to-enlarge on any
+       [data-zoomable] trigger. Native <dialog>.showModal() handles focus
+       trap, inert background, Esc-to-close, and aria-modal implicitly.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <dialog id="lightbox" class="lightbox" aria-labelledby="lightbox-caption">
+    <button type="button" class="lightbox-close" aria-label="Close enlarged image">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M5 5l10 10M15 5l-10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <img class="lightbox-img" alt="" />
+    <p id="lightbox-caption" class="lightbox-caption"></p>
+  </dialog>
 
   <Footer slot="footer" />
 </BaseLayout>
@@ -501,29 +980,42 @@ const principles = [
   }
   .section-header h2 { margin-top: var(--space-2); }
 
-  /* Coursework — open, reference-style deliverable sections */
-  .coursework-section {
-    padding: var(--section-gap) 0;
+  /* ── Coursework: thin TOC band between hero and the first chapter.
+        Just the section navigation lives here; no h2, no padding-heavy
+        chrome. The chapter sections below carry the visual weight. */
+  .coursework-toc-section {
+    padding: var(--space-6) 0 var(--space-5);
   }
 
-  .deliverables {
-    display: flex;
-    flex-direction: column;
+  /* ── Assignment chapters: each deliverable renders as its own banded
+        <section> so the boundaries are unmissable on scroll. Per long-
+        form research (Stripe Press / Linear / Distill), banding works
+        when bands correspond to meaningful semantic units, use 2-3
+        muted neutrals only, and shift at most 3-5 times per page. The
+        compound chapter signal here = bg shift + 160-192px top padding
+        + the existing Cormorant deliverable-title acting as the H2. */
+  .assignment-section {
+    padding: clamp(120px, 14vw, 192px) 0;
+    scroll-margin-top: 96px;
   }
 
+  .assignment-section--first {
+    background: var(--color-paper);            /* white */
+  }
+
+  .assignment-section--second {
+    background: var(--color-paper-warm);       /* #faf9f7 */
+  }
+
+  /* ── Deliverable: lives inside an assignment-section now, so the old
+        top-hairline + 96px padding (used to stack two deliverables in
+        one column) is no longer needed -- each deliverable is the only
+        child of its container. The section's own padding does the
+        breathing room. */
   .deliverable {
-    padding-top: var(--space-8);
-    margin-top: var(--space-8);
-    border-top: 1px solid var(--color-border);
     scroll-margin-top: 96px;
     opacity: 0;
     transform: translateY(30px);
-  }
-
-  .deliverable:first-child {
-    border-top: 0;
-    padding-top: 0;
-    margin-top: 0;
   }
 
   .deliverable.visible {
@@ -549,11 +1041,15 @@ const principles = [
     font-weight: var(--weight-medium);
   }
 
+  /* Deliverable title is now the chapter heading -- promoted in size
+     to match the chapter weight (Stripe Press / Linear pattern).
+     Still uses Cormorant Light + tight tracking for the "ink wash"
+     register. */
   .deliverable-title {
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
     font-weight: var(--weight-light);
-    line-height: var(--leading-snug);
+    line-height: var(--leading-tight);
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
     margin: 0;
@@ -679,6 +1175,14 @@ const principles = [
     border: 1px solid var(--color-border);
   }
 
+  /* In-progress sits between Done and Upcoming. Dashed border + tinted bg
+     reads as "started, not finished" without inventing a new colour. */
+  .phase-status.in-progress {
+    color: var(--color-celadon);
+    background: rgba(125, 158, 140, 0.06);
+    border: 1px dashed var(--color-celadon);
+  }
+
   .phase-note {
     font-size: var(--text-small);
     color: var(--color-wash);
@@ -754,9 +1258,13 @@ const principles = [
   }
 
   /* Rich-phase media sits as a centered figure inside the wider essay
-     column. Tufte pattern: figure ≈ 60% of surrounding text. */
+     column. Tufte pattern: figure ≈ 60% of surrounding text. The same
+     720px cap applies to slide-viewers inside any showcase-feature
+     block (Phase 2 slide deck) so the two carousels read at matching
+     scale across the page. */
   .phase-rich .phase-embed,
-  .phase-rich .slide-viewer {
+  .phase-rich .slide-viewer,
+  .showcase-feature-block .slide-viewer {
     max-width: 720px;
     margin-inline: auto;
   }
@@ -935,7 +1443,7 @@ const principles = [
      global `p { max-width: 65ch }` rule in styles/global.css. */
   .description-para {
     font-size: var(--text-small);
-    color: var(--color-ink);
+    color: var(--color-ink-soft);
     line-height: 1.85;
     word-spacing: 0.03em;
     margin: 0;
@@ -1005,6 +1513,344 @@ const principles = [
 
   .acknowledgments-line + .acknowledgments-line {
     margin-top: var(--space-2);
+  }
+
+  /* ── Phase product showcase ─────────────────────────────────────────
+     Slide-deck composition: demo screenshots (left) + Shepherd panel
+     (right) sit side-by-side; the team image runs as a strip below.
+     On mobile the row stacks. */
+  .phase-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin-top: var(--space-4);
+  }
+
+  .showcase-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .showcase-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .showcase-demo-pane {
+    margin: 0;
+  }
+
+  /* Demo image already carries phone bezels; no extra border or radius. */
+  .showcase-demo {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .showcase-why-pane {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-self: center;
+  }
+
+  /* Logo lockup at the top of the right pane. */
+  .showcase-mark {
+    max-width: 280px;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .showcase-why-title {
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink);
+    line-height: var(--leading-snug);
+    margin: var(--space-3) 0 0;
+  }
+
+  /* Why-prose -- shorter measure than the description-para since this is
+     a panel, not a body column. Soft ink for comfortable reading. */
+  .showcase-why-text {
+    font-size: var(--text-body);
+    color: var(--color-ink-soft);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+    max-width: 50ch;
+  }
+
+  /* Short centered solid hairline -- a Tufte sub-section break. Reads
+     as "minor" relative to the full-width solid hairlines that mark
+     phase boundaries. Per Butterick, single solid is the only defensible
+     rule style; dashed reads as draft / coupon-cut and conflicts with
+     the dashed in-progress pill on this same page (which means
+     "incomplete," not "section break"). Used above the Team block and
+     above the Brainstorming block. */
+  .showcase-divider {
+    width: 64px;
+    height: 0;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-6) auto;
+  }
+
+  /* Brainstorming sub-section -- alternating image / text rows. Image
+     in the narrower (5fr) column, body in the wider (7fr) column. Per
+     the user's brief: text leads, image supports. No inter-observation
+     dividers (the short hairline is reserved for between-section
+     breaks). Row separation is Gestalt proximity: 96px between rows
+     vs 48px within a row -- 2:1 ratio reads as "different observation"
+     without a rule. Source DOM order is image-then-text on every row;
+     :nth-child(even) reorders into the grid for visual variety while
+     keeping the semantic / a11y order stable. */
+  .showcase-brainstorm-block {
+    margin: 0 auto;
+    max-width: 1100px;
+  }
+
+  .brainstorm-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-5) 0 0;
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  /* Reverted to text-dominant 5fr 7fr after user found 1fr 1fr made the
+     overall section too long. Smaller images are paired with a click-
+     to-enlarge lightbox so in-image labels stay readable on demand
+     without occupying scroll real estate by default. */
+  .brainstorm-item {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .brainstorm-item:nth-child(even) {
+    grid-template-columns: 7fr 5fr;
+  }
+
+  .brainstorm-item:nth-child(even) .brainstorm-figure {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  @media (max-width: 768px) {
+    .brainstorm-item,
+    .brainstorm-item:nth-child(even) {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+    .brainstorm-item:nth-child(even) .brainstorm-figure {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+
+  .brainstorm-figure {
+    margin: 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 360px ceiling -- the smaller default that keeps the section
+     compact. Click-to-enlarge lightbox handles the case where
+     in-image labels need to be read at full size. */
+  .brainstorm-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 360px;
+    object-fit: contain;
+  }
+
+  /* Body sized for "deep-dive" presence. Per Butterick + Bringhurst,
+     17-19px Inter at 1.7 leading lands in the comfort band when the
+     measure is ~70ch; the slight letter-spacing tighten compensates
+     for Inter's open default at this size. Soft ink (--color-ink-soft)
+     keeps long reading comfortable -- full ink reads harsh at length. */
+  .brainstorm-body {
+    font-size: clamp(1.0625rem, 0.95rem + 0.25vw, 1.1875rem);
+    line-height: var(--leading-relaxed);
+    letter-spacing: -0.005em;
+    color: var(--color-ink-soft);
+    margin: 0;
+    max-width: none;
+  }
+
+  /* Single-figure sub-section (Prototype, User feedback). The image
+     itself carries the words, so no body prose. Bigger than the
+     brainstorming-row figures because the user said these are the
+     important moments. Same wash-grey eyebrow label as the other
+     sub-sections; same hairline frame as the brainstorming figures. */
+  .showcase-feature-block {
+    margin: 0 auto;
+    max-width: 1100px;
+    width: 100%;          /* ← must be explicit. Without it, when the
+                             child has no intrinsic width (the video
+                             wrapper uses position-absolute children +
+                             padding-bottom to fake an aspect ratio),
+                             the block collapses to the width of the
+                             label and link, and the iframe shrinks. */
+  }
+
+  .showcase-feature {
+    margin: var(--space-4) 0 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .showcase-feature img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Demo video -- 16:9 YouTube embed sized to match the screenshot
+     figures above. Uses padding-bottom hack (instead of aspect-ratio
+     property) because it forces the wrapper to its computed height
+     regardless of the iframe's intrinsic dimensions. The wrapper
+     grows the showcase-feature-block to the full container width
+     (1200px) so the demo doesn't read as smaller than the prototype
+     and feedback images above it. */
+  /* Demo block runs to the full container width so the video reads
+     as the largest figure on the page (it is the culmination). */
+  .showcase-feature-block:has(.showcase-video) {
+    max-width: var(--max-container);
+    width: 100%;
+  }
+
+  .showcase-video {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;          /* 9 / 16 = 0.5625 -- forces 16:9 height */
+    margin: var(--space-3) 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .showcase-video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  /* Center the "Watch on YouTube" link under the video, matching the
+     centered video-paper external link in the rich phase. */
+  .showcase-feature-block > .phase-external {
+    align-self: center;
+    margin-inline: auto;
+  }
+
+  /* Intro paragraph above a single-figure sub-section. Same prose
+     register as .brainstorm-body. No max-width cap so the paragraph
+     fills the wrapper width (1100px) instead of sitting on the left
+     half. Soft ink for comfortable reading. */
+  .showcase-feature-body {
+    font-size: clamp(1.0625rem, 0.95rem + 0.25vw, 1.1875rem);
+    line-height: var(--leading-relaxed);
+    letter-spacing: -0.005em;
+    color: var(--color-ink-soft);
+    margin: var(--space-3) 0 0;
+    max-width: none;
+  }
+
+  /* Prose-only sub-section (Contribution, Reflection). Matches the
+     1100px wrapper of the showcase-feature-blocks above so the label
+     sits at the same horizontal position as the SLIDE DECK / DEMO /
+     PROTOTYPE labels -- the page reads as a single column of
+     consistently-aligned sub-sections rather than a step-down at the
+     tail. The body inside still uses the wide-line typography
+     compensation (soft ink, 1.7 leading, word-spacing) so the longer
+     measure stays readable. */
+  .showcase-prose-block {
+    margin: 0 auto;
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  /* Side-by-side variant -- for tall / portrait images where a full-
+     width treatment would dwarf the page. Image (~600px) sits left,
+     body text fills the remaining ~470px on the right. Bumped from
+     360px after user found in-image text (phone-screenshot UI labels)
+     was too small. The label spans both columns at the top. Mobile
+     collapses to stack: label, image, body. */
+  .showcase-feature-block.is-side {
+    display: grid;
+    grid-template-columns: 600px 1fr;
+    grid-template-areas:
+      "label  label"
+      "figure body";
+    column-gap: var(--space-5);
+    row-gap: var(--space-3);
+    align-items: start;
+  }
+
+  .showcase-feature-block.is-side > .acknowledgments-label {
+    grid-area: label;
+  }
+
+  .showcase-feature-block.is-side > .showcase-feature {
+    grid-area: figure;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .showcase-feature-block.is-side > .showcase-feature-body {
+    grid-area: body;
+    margin: 0;
+    align-self: center;
+  }
+
+  @media (max-width: 768px) {
+    .showcase-feature-block.is-side {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "label"
+        "figure"
+        "body";
+    }
+  }
+
+  /* Team strip -- image already labels each face. The divider above
+     handles the section break; the wrapper owns the strip's own
+     spacing and width. */
+  .showcase-team-block {
+    margin: 0 auto;
+    max-width: 880px;
+  }
+
+  .showcase-team-label {
+    margin-bottom: var(--space-3);
+  }
+
+  .showcase-team {
+    margin: 0;
+    width: 100%;
+  }
+
+  .showcase-team img {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 
   /* Coursework TOC — calm, two-hairline reference-page register */
@@ -1138,6 +1984,149 @@ const principles = [
     color: var(--color-text-secondary);
     line-height: var(--leading-normal);
   }
+
+  /* ── Zoom-trigger + lightbox ─────────────────────────────────────────
+     Pattern: any image inside a [data-zoomable] button gets a hover hint
+     ("CLICK TO ENLARGE") and a zoom-in cursor. Activating the button
+     opens the page-level <dialog id="lightbox">. Native <dialog> +
+     showModal() handles focus trap, inert background, Esc, ARIA. */
+  .zoom-trigger {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+    position: relative;
+    width: 100%;
+    border-radius: var(--radius-md);
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  .zoom-trigger:hover {
+    transform: translateY(-2px);
+  }
+
+  .zoom-trigger:focus-visible {
+    outline: 2px solid var(--color-celadon);
+    outline-offset: 4px;
+  }
+
+  /* Mono "CLICK TO ENLARGE" pill, bottom-right of the figure, fades in
+     on hover/focus only (touch falls back to the button affordance). */
+  .zoom-hint {
+    position: absolute;
+    bottom: var(--space-2);
+    right: var(--space-2);
+    padding: 4px 8px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-celadon);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity var(--duration-normal) var(--ease-out),
+                transform var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+  }
+
+  .zoom-trigger:hover .zoom-hint,
+  .zoom-trigger:focus-visible .zoom-hint {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Lightbox dialog -- single instance for the whole page */
+  .lightbox {
+    border: 0;
+    padding: var(--space-4);
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    max-width: min(95vw, 1400px);
+    max-height: 90vh;
+    color: var(--color-ink);
+    box-shadow: 0 20px 60px rgba(29, 29, 31, 0.18);
+    position: fixed;
+    inset: 0;
+    margin: auto;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(29, 29, 31, 0.55);
+  }
+
+  .lightbox-img {
+    display: block;
+    width: 100%;
+    max-height: calc(90vh - 120px);
+    height: auto;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+  }
+
+  .lightbox-caption {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: border-color var(--duration-normal) var(--ease-out),
+                color var(--duration-normal) var(--ease-out);
+  }
+
+  .lightbox-close:hover {
+    border-color: var(--color-celadon);
+    color: var(--color-celadon);
+  }
+
+  .lightbox-close:focus-visible {
+    outline: 2px solid var(--color-celadon);
+    outline-offset: 2px;
+  }
+
+  /* Scroll lock without position:fixed on body -- preserves scroll
+     position when the dialog opens and closes. */
+  html:has(dialog.lightbox[open]) {
+    overflow: hidden;
+  }
+
+  /* Motion: opt-in only. Reduced-motion users see the dialog appear
+     instantly with no animation. */
+  @media (prefers-reduced-motion: no-preference) {
+    .lightbox[open] {
+      animation: lightbox-in var(--duration-normal) var(--ease-out);
+    }
+    .lightbox[open]::backdrop {
+      animation: lightbox-backdrop-in var(--duration-normal) var(--ease-out);
+    }
+    @keyframes lightbox-in {
+      from { opacity: 0; transform: scale(0.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes lightbox-backdrop-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  }
 </style>
 
 <script>
@@ -1230,4 +2219,43 @@ const principles = [
 
     update();
   });
+
+  // ── Lightbox: native <dialog>.showModal() driven by any [data-zoomable]
+  //    trigger. Single delegated click handler. preventScroll on focus
+  //    return keeps the in-page anchor / scroll position stable. Scroll
+  //    lock handled in CSS via html:has(dialog[open]).
+  const lightbox = document.querySelector<HTMLDialogElement>('#lightbox');
+  if (lightbox) {
+    const lbImg = lightbox.querySelector<HTMLImageElement>('.lightbox-img')!;
+    const lbCap = lightbox.querySelector<HTMLParagraphElement>('#lightbox-caption')!;
+    const lbClose = lightbox.querySelector<HTMLButtonElement>('.lightbox-close')!;
+    let lastTrigger: HTMLElement | null = null;
+
+    document.addEventListener('click', (e: MouseEvent) => {
+      const trigger = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-zoomable]');
+      if (!trigger) return;
+      const img = trigger.querySelector('img');
+      if (!img) return;
+      lastTrigger = trigger;
+      lbImg.src = img.currentSrc || img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = img.alt;
+      lightbox.showModal();
+    });
+
+    // Backdrop click closes (only when click target is dialog itself,
+    // not bubbled from inside the image / caption / close button).
+    lightbox.addEventListener('click', (e: MouseEvent) => {
+      if (e.target === lightbox) lightbox.close();
+    });
+
+    lbClose.addEventListener('click', () => lightbox.close());
+
+    // Restore focus to the figure that opened the lightbox; preventScroll
+    // keeps the page from jumping if the figure is off-screen.
+    lightbox.addEventListener('close', () => {
+      lastTrigger?.focus({ preventScroll: true });
+      lbImg.removeAttribute('src');
+    });
+  }
 </script>
