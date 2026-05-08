@@ -208,29 +208,29 @@ const assignments: Assignment[] = [
             {
               image: '/files/shepherd/ideation/low-fi-prototype.png',
               imageAlt: 'Two pencil-sketched phone screens showing fake-news and calorie-nudge notifications',
-              body: "From there, we also created sketches (low-fidelity drawings) to explain what we are trying to build. One sketch demonstrates a fake-news notification system that automatically flags misleading content while users scroll through social media. Another sketch focuses on actionable insights, where the system analyzes a user's records and personal preferences to suggest their next meal while they are using a calorie-tracking app.",
+              body: "From there, we also created sketches (low-fidelity drawings) to explain what we are trying to build.\n\nThe left sketch shows a fake-news notification system. When the system detects fake news while you are scrolling through social media, it will automatically send a notification flagging the content.\n\nOn the right are the actionable insights. For example, while you are scrolling through your calorie app, the system will automatically dive into your records and personal preferences, then come back with a suggestion for your next meal.",
             },
           ],
           prototype: {
             image: '/files/shepherd/prototype-1.png',
             imageAlt: 'Shepherd dashboard prototype: step count, sleep monitor, live notifications, fake-news detection panel, and calorie scanner',
-            body: "From ideation, our team worked through a lot of directions before landing on a starting point. The first prototype watches what you track and what you read, and pushes one of two things through a notification: a fake-news flag, or a small nudge based on the data you've already got.",
+            body: "With the above ideations, my team and I started implementing and completed the first prototype.",
           },
           userFeedback: {
             image: '/files/shepherd/user-feedback.png',
             imageAlt: 'Prototype 1 feedback ratings across four criteria: usefulness/value (2/5), actionability (4/5), cognitive load (2/5), trust & accuracy (4/5); pull quote "too many notifications" from a "good user"',
-            body: "After Prototype 1, we ran a brief questionnaire with five users. Five short questions each. The chart above sums it up -- actionability and trust scored well, usefulness and cognitive load came in low, and one user said it plainly: \"too many notifications.\"",
+            body: "After implementing the 1st prototype, we interviewed 5 potential users (our friends and family members) using a short questionnaire. The average score was lower than we expected, and one of the interviewees flagged the issue of \"too many notifications.\"",
           },
           prototype2: {
             image: '/files/shepherd/prototype-2.png',
             imageAlt: 'Prototype 2 of Shepherd: a calmer two-screen view -- a Photogram social feed with an inline credibility badge, and a Health summary with a single most-watched briefing at the bottom',
-            body: "After Prototype 1 and the feedback, the disadvantages were clear. Users wanted lower cognitive load and something closer to invisible computing -- the system should sit in the background, not crowd them with notifications. So we did more research and built Prototype 2 around that.",
+            body: "With the user feedback from our 1st prototype, my team and I discussed how to resolve the users' comments and create a product that users truly love. We later agreed on an invisible computing approach (an HCI principle) -- instead of sending notifications, the system would immediately flag content and provide actionable insights on the same screen while users scroll through their phones.",
             layout: 'side',
           },
           userFeedback2: {
             image: '/files/shepherd/user-feedback-2.png',
             imageAlt: 'Prototype 2 feedback: every score moved up. Usefulness 2 to 5, actionability 4 to 5, cognitive load 2 to 5, trust & accuracy 4 to 5. The same user from round 1 now gives a thumbs-up.',
-            body: "After Prototype 2, we ran the same five users through another short survey and a quick interview. Every score moved up -- usefulness 2 to 5, actionability 4 to 5, cognitive load 2 to 5, trust 4 to 5. The \"too many notifications\" complaint was gone.",
+            body: "With the invisible computing approach, we conducted a 2nd interview with the same 5 users using another questionnaire (more detailed). Ultimately, the approach received an almost perfect score, showing that the users were satisfied.",
           },
           demoVideo: {
             src: 'https://www.youtube.com/embed/GWiHdHpN7lo?start=38',
@@ -244,8 +244,8 @@ const assignments: Assignment[] = [
             href: '/files/shepherd/making-health-data-actionable.pdf',
             title: 'Making Health Data Actionable -- Shepherd Phase 2 presentation',
           },
-          contribution: "On this project I led the team -- organizing meetings, encouraging everyone to speak up, and keeping the work coordinated across phases. I also built the slide deck above and Prototype 2: my teammates built Prototype 1, and I combined their ideas into the second iteration. A specific shout-out to Mridul -- [add the specific reason here].",
-          reflection: "The biggest takeaway for me was how much the iteration hinged on cutting, not adding. Prototype 1 had more signals, more notifications, more screen real estate -- and the feedback was uniform: too much. Pulling things out turned out to be the harder design move. The \"too many notifications\" quote stuck with me.",
+          contribution: "On this project, I set up the slide deck, recorded the first demo video (which we later did not use), and implemented Prototype 2. I also served as the team lead by organizing meetings, encouraging everyone to share ideas, and managing the collaboration among team members (i.e., project management).\n\nI also want to give special appreciation to Mridul, as he is very hard-working and always delivers high-quality work. He and I also spent a lot of time exchanging ideas about how to leverage HCI principles to improve the product.",
+          reflection: "I believe this project is very valuable because it provided me with hands-on experience in implementing products using HCI principles. Not only was I able to practically apply HCI principles in product development, but I also gained hands-on experience in building a product through needfinding, ideation, prototyping, and more. Before taking this course, I always thought building a product meant building everything from start to end in one take. However, this course taught me the right approach -- \"build small, verify carefully.\" Also, despite all team members leveraging the same set of HCI principles when discussing product ideas, we still had different perspectives on how to address users' needs. Overall, the team project experience was enjoyable, and I learned a lot from both the course and the project.",
         },
       },
     ],
@@ -329,7 +329,7 @@ const principles = [
           <li>
             <a href="#references" class="coursework-toc-link">
               <span class="coursework-toc-num">03</span>
-              <span class="coursework-toc-title">References</span>
+              <span class="coursework-toc-title">HCI principles</span>
             </a>
           </li>
         </ol>
@@ -696,7 +696,9 @@ const principles = [
 
                             <div class="showcase-prose-block">
                               <span class="acknowledgments-label showcase-team-label">Contribution</span>
-                              <p class="showcase-feature-body">{phase.productShowcase.contribution}</p>
+                              {phase.productShowcase.contribution.split('\n\n').map((para) => (
+                                <p class="showcase-feature-body">{para}</p>
+                              ))}
                             </div>
                           </>
                         )}
@@ -707,7 +709,9 @@ const principles = [
 
                             <div class="showcase-prose-block">
                               <span class="acknowledgments-label showcase-team-label">Reflection</span>
-                              <p class="showcase-feature-body">{phase.productShowcase.reflection}</p>
+                              {phase.productShowcase.reflection.split('\n\n').map((para) => (
+                                <p class="showcase-feature-body">{para}</p>
+                              ))}
                             </div>
                           </>
                         )}
@@ -896,8 +900,8 @@ const principles = [
   <section id="references" class="references-section" aria-labelledby="references-heading">
     <div class="container">
       <div class="content">
-        <span class="section-label">References</span>
-        <h2 id="references-heading">HCI principles</h2>
+        <span class="section-label">Applied</span>
+        <h2 id="references-heading">HCI principles I leveraged</h2>
       </div>
 
       <div class="principles-grid">
@@ -1689,7 +1693,7 @@ const principles = [
      for Inter's open default at this size. Soft ink (--color-ink-soft)
      keeps long reading comfortable -- full ink reads harsh at length. */
   .brainstorm-body {
-    font-size: clamp(1.0625rem, 0.95rem + 0.25vw, 1.1875rem);
+    font-size: 1rem;
     line-height: var(--leading-relaxed);
     letter-spacing: -0.005em;
     color: var(--color-ink-soft);
@@ -1780,12 +1784,18 @@ const principles = [
      fills the wrapper width (1100px) instead of sitting on the left
      half. Soft ink for comfortable reading. */
   .showcase-feature-body {
-    font-size: clamp(1.0625rem, 0.95rem + 0.25vw, 1.1875rem);
+    font-size: 1rem;
     line-height: var(--leading-relaxed);
     letter-spacing: -0.005em;
     color: var(--color-ink-soft);
     margin: var(--space-3) 0 0;
     max-width: none;
+  }
+
+  /* Multi-paragraph spacing for prose blocks (Contribution / Reflection
+     when the body string contains \n\n). Same rhythm as brainstorm-body. */
+  .showcase-feature-body + .showcase-feature-body {
+    margin-top: 1.25em;
   }
 
   /* Prose-only sub-section (Contribution, Reflection). Matches the
