@@ -2,24 +2,37 @@
 /**
  * HCI Course Page — ARIN5301 (Prof. Xiaojuan Ma, HKUST)
  *
- * Three sections: hero → coursework (assignments with phases) → principles.
+ * Three sections: hero → coursework (deliverables with phases) → references.
  *
- * A "phase" is a deliverable. It can carry a project title, a video or PDF
- * artifact, a multi-paragraph description, and acknowledgments. Two render
- * modes:
- *   - Rich phase (artifact.inline === true): the iframe is always visible
- *     directly inside the card; the description collapses to ~3 lines with a
- *     "Show more" toggle (H3 minimalist on small screens, H4 user control).
- *   - Disclosure phase (artifact present, inline !== true): native <details>
- *     keeps the artifact behind a click-to-expand row.
+ * A "deliverable" is one assignment for the course (Final Project,
+ * Group Project, ...). Each deliverable is rendered as an open
+ * reference-style section — hairline top divider, Cormorant display title
+ * with a mono celadon eyebrow, optional 65ch intro paragraph, then a phase
+ * list. No card chrome around it; embeds and future brainstorming
+ * artifact strips fill the deliverable width. Layout decisions are
+ * documented in design/decisions/004-hci-deliverables-reference-style.md.
+ *
+ * A "phase" is one submission inside a deliverable. It can carry a project
+ * title, a video / PDF / slide-deck artifact, a multi-paragraph
+ * description, and acknowledgments. Three render modes:
+ *   - Rich phase (artifact.inline === true): the iframe / slide carousel
+ *     is always visible directly in the deliverable; the description
+ *     collapses to ~3 lines with a "Show more" toggle (H3 minimalist on
+ *     small screens, H4 user control).
+ *   - Disclosure phase (artifact present, inline !== true): native
+ *     <details> keeps the artifact behind a click-to-expand row.
  *   - Static phase (no artifact): plain row with an Upcoming pill.
+ *
+ * The page-top TOC links to each deliverable (#assignment-{slug}) and to
+ * the references section (#references) at the bottom.
  *
  * HCI principles enacted:
  * - H1 Consistency — celadon accent is the only deviation; tokens unchanged
- * - H2 Mapping — page organised by assignment (TA's mental model)
- * - H3 Minimalism — long descriptions truncate to 3 lines on every viewport
+ * - H2 Mapping — page organised by deliverable (TA's mental model)
+ * - H3 Minimalism — hairlines over boxes; long descriptions truncate
  * - H4 Freedom — show-more is reversible; details disclosure is opt-in
- * - H6 Recognition — phase status pills surface state without recall
+ * - H5 Flexibility — TOC closes the execution gulf for time-pressed graders
+ * - H6 Recognition — phase status pills + mono eyebrow surface state
  * - HCI-11 multimodal redundancy — colour never carries meaning alone
  */
 
@@ -83,7 +96,7 @@ const assignments: Assignment[] = [
           'Kimi Claw is a 24/7 AI assistant released in February 2026. This application is built on top of OpenClaw, with full integration into Kimi’s ecosystem (using Kimi’s AI model and cloud infrastructure). Kimi Claw aims to automate complex tasks and improve users’ efficiency. However, despite its capabilities, it comes with pros and cons. Due to time constraints, the video focuses on the user desirability aspect.',
           'In terms of pros, there are 3 main advantages. First, it offers strong automation. Users can input natural language commands, which Kimi Claw automatically translates into executable code. This eliminates the need for manual installation and implementation. Second, it is easy to set up. I recall when I set up my self-hosted OpenClaw on a virtual private server (VPS), it took me a day just to get it functional. However, Kimi Claw allows users to deploy the AI agent with just a few clicks, saving time and reducing cognitive load. Third, it has low maintenance. As OpenClaw has frequent updates, manually tracking and updating can be time-consuming. At Kimi Claw, updates are handled by the Kimi platform, and users can upgrade with a one click.',
           'Despite the above pros, there are 2 disadvantages. First, Kimi Claw violates the invisible computing principle. Unlike the original OpenClaw, Kimi Claw shows all the reasoning for each operation. While this allows users to review its current status, it becomes overwhelming over time (e.g., dozens of messages for a single operation). Second is the over-automation issue. Unlike traditional coding, where code is visible, changes using Kimi Code occur in a black box, making it unclear what is modified or whether new issues have been introduced.',
-          'With that, we can see that, despite its strengths, Kimi Claw presents a trade-off — convenience at the expense of reduced transparency and control.',
+          'With that, we can see that, despite its strengths, Kimi Claw presents a trade-off -- convenience at the expense of reduced transparency and control.',
         ].join('\n\n'),
         acknowledgments: [
           'Copyright: Some images used in the video were sourced from publicly available sources via online searches (e.g., Google). All rights belong to their respective owners. This video is created for educational purposes only.',
@@ -185,39 +198,46 @@ const principles = [
   <!-- ═══════════════════════════════════════════════════════════════════
        ASSIGNMENTS
        ═══════════════════════════════════════════════════════════════════ -->
-  <section id="assignments" class="assignments-section" aria-labelledby="assignments-heading">
-    <div class="container content">
+  <section id="coursework" class="coursework-section" aria-labelledby="assignments-heading">
+    <div class="container">
       <div class="section-header" data-animate="reveal">
         <span class="section-label">ARIN5301 deliverables</span>
         <h2 id="assignments-heading">Coursework</h2>
       </div>
 
-      <nav class="assignments-toc" aria-label="Jump to an assignment" data-animate="reveal">
-        <span class="assignments-toc-label">Jump to</span>
-        <ul class="assignments-toc-list" role="list">
+      <nav class="coursework-toc" aria-label="Section navigation" data-animate="reveal">
+        <span class="coursework-toc-label section-label">Sections</span>
+        <ol class="coursework-toc-list" role="list">
           {assignments.map((assignment) => (
             <li>
-              <a href={`#assignment-${assignment.slug}`} class="assignments-toc-link">
-                <span class="assignments-toc-number">{assignment.number}</span>
-                <span class="assignments-toc-title">{assignment.title}</span>
+              <a href={`#assignment-${assignment.slug}`} class="coursework-toc-link">
+                <span class="coursework-toc-num">{assignment.number}</span>
+                <span class="coursework-toc-title">{assignment.title}</span>
               </a>
             </li>
           ))}
-        </ul>
+          <li>
+            <a href="#references" class="coursework-toc-link">
+              <span class="coursework-toc-num">03</span>
+              <span class="coursework-toc-title">References</span>
+            </a>
+          </li>
+        </ol>
       </nav>
 
-      <div class="assignments-list">
+      <div class="deliverables">
         {assignments.map((assignment) => (
-          <article id={`assignment-${assignment.slug}`} class="assignment-card" data-animate="reveal">
-            <div class="assignment-number" aria-hidden="true">{assignment.number}</div>
-            <div class="assignment-content">
-              <h3 class="assignment-title">{assignment.title}</h3>
-              {assignment.description && (
-                <p class="assignment-description">{assignment.description}</p>
-              )}
+          <article id={`assignment-${assignment.slug}`} class="deliverable" data-animate="reveal">
+            <header class="deliverable-header">
+              <span class="deliverable-eyebrow">Deliverable {assignment.number}</span>
+              <h3 class="deliverable-title">{assignment.title}</h3>
+            </header>
+            {assignment.description && (
+              <p class="deliverable-intro">{assignment.description}</p>
+            )}
 
-              <ul class="phase-list" role="list">
-                {assignment.phases.map((phase) => (
+            <ol class="phase-list" role="list">
+              {assignment.phases.map((phase) => (
                   <li class="phase-item">
                     {phase.artifact?.inline ? (
                       <div class="phase phase-rich">
@@ -390,8 +410,7 @@ const principles = [
                     )}
                   </li>
                 ))}
-              </ul>
-            </div>
+              </ol>
           </article>
         ))}
       </div>
@@ -399,14 +418,14 @@ const principles = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       PRINCIPLES
+       REFERENCES — HCI principles that shaped the deliverables
        Gestalt: Proximity + Similarity; Miller's ~7 — each cap ≤10 items
        ═══════════════════════════════════════════════════════════════════ -->
-  <section id="principles" class="principles-section" aria-labelledby="principles-heading">
+  <section id="references" class="references-section" aria-labelledby="references-heading">
     <div class="container">
       <div class="content">
-        <span class="section-label">Reference</span>
-        <h2 id="principles-heading">HCI principles</h2>
+        <span class="section-label">References</span>
+        <h2 id="references-heading">HCI principles</h2>
       </div>
 
       <div class="principles-grid">
@@ -482,75 +501,111 @@ const principles = [
   }
   .section-header h2 { margin-top: var(--space-2); }
 
-  /* Assignments */
-  .assignments-section {
+  /* Coursework — open, reference-style deliverable sections */
+  .coursework-section {
     padding: var(--section-gap) 0;
   }
 
-  .assignments-list {
+  .deliverables {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
-    margin-bottom: var(--space-4);
   }
 
-  .assignment-card {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-4);
-    padding: var(--space-5);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-celadon);
-    border-radius: var(--radius-lg);
+  .deliverable {
+    padding-top: var(--space-8);
+    margin-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    scroll-margin-top: 96px;
     opacity: 0;
     transform: translateY(30px);
-    transition: transform var(--duration-normal) var(--ease-out),
-                box-shadow var(--duration-normal) var(--ease-out);
   }
 
-  .assignment-card:hover {
-    box-shadow: var(--shadow-md);
+  .deliverable:first-child {
+    border-top: 0;
+    padding-top: 0;
+    margin-top: 0;
   }
 
-  .assignment-card.visible {
+  .deliverable.visible {
     opacity: 1;
     transform: translateY(0);
     transition: opacity var(--duration-reveal) var(--ease-out),
                 transform var(--duration-reveal) var(--ease-out);
   }
 
-  .assignment-number {
+  .deliverable-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+  }
+
+  .deliverable-eyebrow {
     font-family: var(--font-mono);
-    font-size: var(--text-h2);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
     color: var(--color-celadon);
     font-weight: var(--weight-medium);
-    line-height: 1;
-    min-width: 2ch;
   }
 
-  .assignment-content {
-    flex: 1;
-    min-width: 0;
+  .deliverable-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: var(--weight-light);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: 0;
   }
 
-  .assignment-title {
-    font-size: var(--text-h3);
-    margin-bottom: var(--space-1);
-  }
-
-  .assignment-description {
-    font-size: var(--text-small);
+  .deliverable-intro {
+    font-size: var(--text-body);
     color: var(--color-text-secondary);
     line-height: var(--leading-relaxed);
-    margin-bottom: var(--space-3);
+    margin: 0 0 var(--space-5);
     max-width: 65ch;
   }
 
-  /* Phase list — one row per phase */
+  /* Artifact strip — full-width gallery for brainstorming photos / sketches.
+     Drop a <div class="artifact-strip"> inside a deliverable when you want
+     figures to break out of the prose column and fill the deliverable width.
+     Each <figure class="artifact-figure"> renders as image + mono caption. */
+  .artifact-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: var(--space-3);
+    margin: var(--space-4) 0;
+  }
+
+  .artifact-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .artifact-figure img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    display: block;
+  }
+
+  .artifact-figure figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-wash);
+    line-height: var(--leading-normal);
+  }
+
+  /* Phase list — one row per phase, hairline-separated inside a deliverable */
   .phase-list {
     list-style: none;
-    margin: var(--space-3) 0 0;
+    margin: var(--space-5) 0 0;
     padding: 0;
     border-top: 1px solid var(--color-border);
   }
@@ -560,7 +615,7 @@ const principles = [
   }
 
   .phase {
-    padding: var(--space-3) 0;
+    padding: var(--space-4) 0;
   }
 
   .phase-summary {
@@ -698,6 +753,14 @@ const principles = [
     display: block;
   }
 
+  /* Rich-phase media sits as a centered figure inside the wider essay
+     column. Tufte pattern: figure ≈ 60% of surrounding text. */
+  .phase-rich .phase-embed,
+  .phase-rich .slide-viewer {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
   .phase-embed-pdf {
     height: clamp(420px, 80vh, 760px);
   }
@@ -715,6 +778,10 @@ const principles = [
     font-size: var(--text-small);
     font-weight: var(--weight-medium);
     color: var(--color-celadon);
+  }
+
+  .phase-rich .phase-external {
+    align-self: center;
   }
 
   .phase-external::after { display: none; }
@@ -825,12 +892,18 @@ const principles = [
   }
 
   /* ── Description clip / show-more pattern ───────────────────────────── */
+  /* Description spans the full deliverable width — user chose the whole
+     horizontal span over the Tufte 80ch cap. At a 1200px container the
+     line measure is wider than the comprehension-safe range; that
+     trade-off is intentional, accepted in DDR-004 §10. */
   .description-clip {
-    margin-top: var(--space-2);
+    margin-top: var(--space-3);
   }
 
   .description-body {
-    max-height: 5.4em;
+    /* 3 lines at the wider line-height (1.85). Recomputed in iteration 3
+       when line-height bumped from 1.7 to 1.85 — see DDR-004 §11. */
+    max-height: 5.55em;
     overflow: hidden;
     position: relative;
   }
@@ -844,7 +917,7 @@ const principles = [
     position: absolute;
     inset: auto 0 0 0;
     height: 2.4em;
-    background: linear-gradient(to bottom, transparent, var(--color-surface));
+    background: linear-gradient(to bottom, transparent, var(--color-bg));
     pointer-events: none;
     transition: opacity var(--duration-fast) var(--ease-out);
   }
@@ -853,16 +926,24 @@ const principles = [
     opacity: 0;
   }
 
+  /* Wide-line typography compensation. When prose flows past the
+     comprehension-safe measure (~80ch), three things break unless
+     compensated: leading is too tight, low-contrast text becomes
+     untrackable, and rivers form on Inter. The override below addresses
+     all three — see DDR-004 §11 for sources (Bringhurst, Butterick, WCAG
+     1.4.12, WebAIM). The `max-width: none` is required to defeat the
+     global `p { max-width: 65ch }` rule in styles/global.css. */
   .description-para {
     font-size: var(--text-small);
-    color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
+    color: var(--color-ink);
+    line-height: 1.85;
+    word-spacing: 0.03em;
     margin: 0;
-    max-width: 65ch;
+    max-width: none;
   }
 
   .description-para + .description-para {
-    margin-top: var(--space-3);
+    margin-top: 1.5em;
   }
 
   .description-toggle {
@@ -894,13 +975,15 @@ const principles = [
     transform: rotate(180deg);
   }
 
-  /* ── Phase-level acknowledgments (small print) ──────────────────────── */
+  /* ── Phase-level acknowledgments — centered colophon at the tail ────── */
+  /* Film-credits register: centered, hairline above, no card chrome.
+     Mono uppercase label + small wash-grey lines. */
   .phase-acknowledgments {
-    padding: var(--space-3) var(--space-4);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    max-width: 65ch;
+    margin: var(--space-5) auto 0;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+    max-width: 56ch;
+    text-align: center;
   }
 
   .acknowledgments-label {
@@ -924,69 +1007,70 @@ const principles = [
     margin-top: var(--space-2);
   }
 
-  /* Assignments TOC — closes the execution gulf for graders. */
-  .assignments-toc {
+  /* Coursework TOC — calm, two-hairline reference-page register */
+  .coursework-toc {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: var(--space-3);
-    margin-bottom: var(--space-5);
-    padding: var(--space-3) var(--space-4);
-    background: var(--color-surface);
-    border-radius: var(--radius-md);
-    border-left: 2px solid var(--color-celadon);
+    gap: var(--space-3) var(--space-5);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-8);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .assignments-toc-label {
-    font-family: var(--font-mono);
-    font-size: var(--text-caption);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-wash);
+  .coursework-toc-label {
+    flex-shrink: 0;
   }
 
-  .assignments-toc-list {
+  .coursework-toc-list {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
+    gap: var(--space-3) var(--space-5);
     margin: 0;
     padding: 0;
   }
 
-  .assignments-toc-link {
+  .coursework-toc-link {
     display: inline-flex;
     align-items: baseline;
     gap: var(--space-2);
-    font-size: var(--text-small);
+    font-family: var(--font-display);
+    font-size: var(--text-body);
+    font-weight: var(--weight-light);
     color: var(--color-text);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
     text-decoration: none;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-    transition: background var(--duration-normal) var(--ease-out),
-                color var(--duration-normal) var(--ease-out);
+    padding: var(--space-1) 0;
+    transition: color var(--duration-normal) var(--ease-out);
+    scroll-margin-top: 96px;
   }
 
-  .assignments-toc-link::after { display: none; }
+  .coursework-toc-link::after { display: none; }
 
-  .assignments-toc-link:hover {
-    background: rgba(125, 158, 140, 0.1);
+  .coursework-toc-link:hover {
     color: var(--color-celadon);
   }
 
-  .assignments-toc-number {
+  .coursework-toc-num {
     font-family: var(--font-mono);
     font-size: var(--text-caption);
+    letter-spacing: var(--tracking-wider);
     color: var(--color-celadon);
+    font-weight: var(--weight-medium);
   }
 
-  /* Principles */
-  .principles-section {
+  /* References — HCI principles that shaped the deliverables */
+  .references-section {
     padding: var(--section-gap) 0;
     background: var(--color-surface);
+    scroll-margin-top: 96px;
   }
 
-  .principles-section h2 {
+  .references-section h2 {
     margin-top: var(--space-3);
     margin-bottom: var(--space-6);
   }
